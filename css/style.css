@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 body {
-    font-family: sans-serif;
+    font-family: "SFProDisplay-Regular", sans-serif;
     background: #e5e5e5;
     font-style: normal;
     font-weight: normal;
@@ -107,6 +107,7 @@ body {
     padding-bottom: 0;
 }
 .post-title {
+    font-family: "SFProDisplay-Semibold", sans-serif;
     margin-top: 0;
     margin-bottom: 19px;
     font-weight: 600;
@@ -207,6 +208,7 @@ body {
     margin-right: 17px;
 }
 .user-name {
+    font-family: "SFProDisplay-Semibold", sans-serif;
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
@@ -290,6 +292,7 @@ body {
     padding: 23px 25px;
 }
 .card-title {
+    font-family: "SFProDisplay-Semibold", sans-serif;
     margin-top: 0;
     margin-bottom: 0;
     font-weight: 600;
@@ -301,6 +304,7 @@ body {
     padding: 22px 40px 20px 25px;
 }
 .card-body-title {
+    font-family: "SFProDisplay-Semibold", sans-serif;
     text-decoration: none;
     margin: 0 0 10px;
     font-weight: 600;
@@ -344,6 +348,7 @@ body {
 }
 .add-title,
 .add-text {
+    font-family: "SFProDisplay-Semibold", sans-serif;
     background: #fff;
     border: 1px solid #e8e8e8;
     padding: 23px 30px;
