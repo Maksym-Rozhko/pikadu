@@ -190,13 +190,50 @@ body {
 .sidebar {
     width: 31%;
 }
-.user {
+.user,
+.login {
     background-color: #fafafa;
     border: 1px solid #e8e8e8;
     padding: 15px 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.login {
+    display: inherit;
+}
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+.login-title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #595959;
+}
+.login-input {
+    display: block;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    padding: 5px 15px;
+    margin-bottom: 15px;
+}
+.login-forget,
+.login-signup {
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+    color: #757575;
+    margin-bottom: 10px;
+}
+.login-signup {
+    text-transform: uppercase;
+    color: #fa8c16;
+    font-size: 16px;
+    margin-top: 10px;
+    text-align: right;
 }
 .user-info {
     display: flex;
@@ -220,6 +257,7 @@ body {
     fill: #000;
 }
 .sidebar-nav {
+    display: none;
     background-color: #fff;
 }
 .sidebar-menu {
@@ -245,7 +283,8 @@ body {
     background-color: #fffbe6;
     border-right: 3px solid #faad14;
 }
-.button {
+.button, 
+.login-signin {
     background: #faad14;
     border-radius: 4px;
     text-decoration: none;
@@ -255,6 +294,16 @@ body {
     padding: 13px;
     border: none;
     cursor: pointer;
+}
+.login-signin {
+    padding: 0;
+    line-height: 32px;
+}
+.login-signin:hover {
+    filter: opacity(80%);
+}
+.login-signin:active {
+    filter: brightness(85%);
 }
 .button-outline {
     background: #fff;
@@ -269,7 +318,7 @@ body {
     fill: #ffc53d;
 }
 .button-new-post {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 100%;
