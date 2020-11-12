@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/fonts.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/main.js" defer></script>
     <title>
         Pikadu - Главная
     </title>
@@ -67,22 +68,8 @@
                         Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Злых, имеет запятых. Маленькая заманивший образ, ipsum продолжил щеке, всеми маленький свою свой великий, если то. Большого семантика осталось текстами.
                         Переписали имени жизни своих меня ты. Мир, щеке буквоград. Все, меня силуэт агентство взгляд инициал свое подзаголовок свой оксмокс власти выйти взобравшись, до текста! Переулка текстов снова образ сбить продолжил.
                         Парадигматическая вопрос выйти ведущими щеке журчит дорогу пунктуация вскоре меня, взгляд точках! Снова составитель заглавных проектах грустный. Собрал сих рыбного lorem последний что текста толку оксмокс наш ты строчка! Взгляд!
-                    <p class="post-text">
-                        Вершину, дорогу однажды но все всемогущая текст. Ведущими назад своих себя которое составитель рыбными рыбного ipsum живет сбить ему меня, одна это вопрос выйти своего рукопись снова бросил которой! На берегу?
-                        Строчка коварный эта текстами курсивных вскоре возвращайся? Языком рыбными единственное, свою имени маленькая сбить. Эта залетают, единственное запятой себя снова подзаголовок родного речью, свой, маленькая предупредила рекламных предупреждал если ее.
-                        Снова скатился, переписывается путь заглавных диких реторический то проектах обеспечивает раз встретил коварных города букв, все парадигматическая ему до осталось даль? Которой рыбными ты точках вдали залетают использовало, рыбного большой!
-                    </p>
-                    <p class="post-text">
-                        Заголовок, злых деревни подпоясал возвращайся переулка текстов заглавных бросил но всеми домах снова первую букв он рыбными единственное, вершину сих за большого путь лучше диких океана что? Журчит, дороге великий.
-                        Буквенных имеет строчка все курсивных от всех грустный ты однажды сбить большого силуэт, страна родного за ipsum! Своих продолжил встретил переписывается о! Безорфографичный, на берегу! Lorem жаренные собрал коварных наш повстречался встретил.
-                        По всей имени ему пор речью, залетают заманивший оксмокс взобравшись парадигматическая свое переулка, переписывается возвращайся использовало дал там повстречался назад! Свою предложения за коварный языкового последний от всех предупредила текстами подзаголовок. Все.
-                    </p>
                     <div class="tags">
                         <a href="#" class="tag">#свежее</a>
-                        <a href="#" class="tag">#горячее</a>
-                        <a href="#" class="tag">#новое</a>
-                        <a href="#" class="tag">#мое</a>
-                        <a href="#" class="tag">#случйность</a>
                     </div>
                 </div>
                 <!-- /.post-body -->
@@ -323,7 +310,6 @@
         </main>
         <!-- /.posts -->
         <aside class="sidebar">
-
             <div class="login">
                 <form class="login-form">
                     <h2 class="login-title">
@@ -336,21 +322,45 @@
                     <a href="#" class="login-signup">Sign Up</a>
                 </form>
             </div>
-
+            <!-- /.login -->
             <div class="user">
-                <a href="#" class="user-info">
-                    <img width="40" height="40" src="./images/avatar.jpeg" alt="photo: user" class="user-avatar">
-                    <span class="user-name">
-                        rozhko-maksym
-                    </span>
-                </a>
-                <!-- /.user-info -->
-                <a href="" class="exit">
-                    <svg class="icon icon-exit">
-                        <use xlink:href="images/icons.svg#exit"></use>
-                    </svg>
-                </a>
-                <!-- /.exit -->
+                <div class="user-container">
+                    <a href="#" class="user-info">
+                        <img width="40" height="40" src="./images/avatar.jpeg" alt="photo: user" class="user-avatar">
+                        <span class="user-name">
+                            rozhko-maksym
+                        </span>
+                    </a>
+                    <!-- /.user-info -->
+                    <a href="" class="edit">
+                        <img class="icon icon-edit" src="images/edit-button.svg" alt="edit">
+                    </a>
+                    <!-- /.edit -->
+                    <a href="" class="exit">
+                        <svg class="icon icon-exit">
+                            <use xlink:href="images/icons.svg#exit"></use>
+                        </svg>
+                    </a>
+                    <!-- /.exit -->
+                </div>
+                <!-- /.user-container -->
+                <form class="edit-container">
+                    <h2 class="edit-title">
+                        Edit form
+                    </h2>
+                    <label class="edit-label">
+                        Your login
+                        <input type="text" name="username" minlength="3" placeholder="Enter your login" class="edit-input edit-username" required>
+                    </label>
+                    <label class="edit-label">
+                        Your avatar
+                        <input type="text" name="useravatar" placeholder="URL-photo" class="edit-input edit-avatar">
+                    </label>
+                    <button class="edit-btn">
+                        Save
+                    </button>
+                </form>
+                <!-- /.edit-container -->
             </div>
             <!-- /.user -->
             <nav class="sidebar-nav">
@@ -423,6 +433,5 @@
         </aside>
         <!-- /.sidebar -->
     </div>
-    <script src="./js/main.js"></script>
 </body>
 </html>
