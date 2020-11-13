@@ -94,6 +94,10 @@ body {
 }
 .posts {
     width: 67%;
+    display: none;
+}
+.posts.visible {
+    display: block;
 }
 .post {
     background: #fff;
@@ -121,12 +125,16 @@ body {
 }
 .tags {
     margin-bottom: 22px;
+    color: #bfbfbf;
 }
 .tag {
     color: #bfbfbf;
     font-size: 14px;
-    margin-right: 10px;
+    margin-left: 10px;
     text-decoration: none;
+}
+.tag:first-child {
+    margin-left: 0;
 }
 .tag:last-child {
     margin-right: 0;
@@ -362,6 +370,9 @@ body {
     width: 100%;
     margin-top: 20px;
 }
+.button-new-post.visible {
+    display: flex;
+}
 .icon-fire {
     fill: #fff;
     width: 11px;
@@ -430,8 +441,12 @@ body {
 }
 /*new-post page*/
 .add-post {
-    display: flex;
+    display: none;
     flex-direction: column;
+    width: 67%;
+}
+.add-post.visible {
+    display: flex;
 }
 .add-title,
 .add-text {

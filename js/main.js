@@ -1,3 +1,16 @@
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDeVl6AfWEMSnd5tZgEYNJ7d66r9fWXLuA",
+    authDomain: "pikabudb.firebaseapp.com",
+    databaseURL: "https://pikabudb.firebaseio.com",
+    projectId: "pikabudb",
+    storageBucket: "pikabudb.appspot.com",
+    messagingSenderId: "95183259045",
+    appId: "1:95183259045:web:b093c1dd5bc9818a34544c"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
 let menuToggle = document.querySelector('#menu-toggle');
 let menu = document.querySelector('.sidebar');
 
@@ -24,6 +37,8 @@ const editUserName = document.querySelector('.edit-username');
 const editAvatar = document.querySelector('.edit-avatar');
 const userAvatarElem = document.querySelector('.user-avatar');
 const postsWrapper = document.querySelector('.posts');
+const btnNewPost = document.querySelector('.button-new-post');
+const addPostElem = document.querySelector('.add-post');
 
 const listUsers = [
     {
@@ -31,6 +46,7 @@ const listUsers = [
         email: 'maks@gmail.com',
         password: '232323',
         displayName: 'MaksJS',
+        avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
     },
     {
         id: '02',
@@ -43,6 +59,9 @@ const listUsers = [
 const setUsers = {
     user: null,
     LogIn(email, password, handler) {
+        if(handler) {
+            handler();
+        }
         // console.log('Log In');
         // console.log(email, password);
         if(!regExpValidEmail.test(email)) {
@@ -58,11 +77,17 @@ const setUsers = {
         }
     },
     LogOut(handler) {
+        if(handler) {
+            handler();
+        }
         // console.log('Log Out');
         this.user = null;
         handler();
     },
     SignUp(email, password, handler) {
+        if(handler) {
+            handler();
+        }
         // console.log('Sign Up');
         if(!regExpValidEmail.test(email)) {
             alert('Email isn\'t valid');
@@ -105,6 +130,9 @@ const setUsers = {
         console.log('Forget password?')
     },
     editUser(userName, userAvatar, handler) {
+        if(handler) {
+            handler();
+        }
         if(userName) {
             this.user.displayName = userName;
         };
@@ -127,7 +155,10 @@ const setPosts = {
                 'мое',
                 'случайность'
             ],
-            author: 'maks@gmail.com',
+            author: { 
+                displayName: 'maks',
+                avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
+            },
             date: '11.11.2020, 15:05:44',
             like: 75,
             comments: 20,
@@ -141,12 +172,32 @@ const setPosts = {
                 'горячее',
                 'случайность'
             ],
-            author: 'rita@gmail.com',
+            author: {
+                displayName: 'kate',
+                avatar: 'https://ath2.unileverservices.com/wp-content/uploads/sites/4/2019/06/lemonade-braids-freshlengths.jpg',
+            },
             date: '10.10.2020, 12:35:12',
             like: 35,
             comments: 17,
         }
     ],
+    addPost(title, text, tags, handler) {
+        if(handler) {
+            handler();
+        }
+        this.allPosts.unshift({
+            title,
+            text,
+            tags: tags.split(',').map(item => item.trim()),
+            author: {
+                displayName: setUsers.user.displayName,
+                avatar: setUsers.user.avatar,
+            },
+            date: new Date().toLocaleString(),
+            like: 0,
+            comments: 0,
+        });
+    }
 };
 
 const toggleAuthDom = () => {
@@ -158,12 +209,21 @@ const toggleAuthDom = () => {
         loginElem.style.display = 'none';
         userNameElem.textContent = user.displayName; //.split('\@')[0];
         userAvatarElem.src = user.avatar || userAvatarElem.src;
+        btnNewPost.classList.add('visible');
         // userAvatarElem.src = user.avatar ? user.avatar : userAvatarElem.src;
     } else {
         currentUserElem.style.display = 'none';
         loginElem.style.display = '';
+        btnNewPost.classList.remove('visible');
+        addPostElem.classList.remove('visible');
+        postsWrapper.classList.add('visible');
     }
 };
+
+const showAddPost = () => {
+    addPostElem.classList.add('visible');
+    postsWrapper.classList.remove('visible');
+}
 
 const showAllPosts = () => {
     let postsHTML = '';
@@ -179,9 +239,9 @@ const showAllPosts = () => {
                     <p class="post-text">
                         ${text}
                     <div class="tags">
-                        <a href="#" class="tag">
-                            ${tags}
-                        </a>
+                        ${tags.map(tag => `<a href="#" class="tag">
+                            #${tag}
+                        </a>`)}
                     </div>
                 </div>
                 <!-- /.post-body -->
@@ -213,10 +273,10 @@ const showAllPosts = () => {
                     <!-- /.post-buttons -->
                     <div class="post-author">
                         <div class="author-about">
-                            <a href="#" class="author-username">${author.split('\@')[0]}</a>
+                            <a href="#" class="author-username">${author.displayName}</a>
                             <span class="post-time">${date}</span>
                         </div>
-                        <a href="#" class="author-link"><img src="./images/avatar.jpeg" alt="avatar" class="author-avatar"></a>
+                        <a href="#" class="author-link"><img src=${author.avatar || "./images/avatar.jpeg"} alt="avatar" class="author-avatar"></a>
                     </div>
                     <!-- /.post-author -->
                 </div>
@@ -225,6 +285,9 @@ const showAllPosts = () => {
     });
 
     postsWrapper.innerHTML = postsHTML;
+
+    addPostElem.classList.remove('visible');
+    postsWrapper.classList.add('visible');
 };
 
 const init = () => {
@@ -270,8 +333,53 @@ const init = () => {
         editContainer.classList.remove('visible');
     });
 
+    btnNewPost.addEventListener('click', e => {
+        e.preventDefault();
+        showAddPost();
+    });
+
+    addPostElem.addEventListener('submit', e => {
+        e.preventDefault();
+        const formElements = addPostElem.elements;
+        // console.log(formElements);
+        const { title, text, tags } = formElements;
+        // console.log(title, text, tags);
+
+        if(title.value.length < 6) {
+            alert('Too short title');
+            return;
+        }
+        if(text.value.length < 50) {
+            alert('Too short post');
+            return;
+        }
+
+        setPosts.addPost(title.value, text.value, tags.value, showAllPosts);
+
+        addPostElem.classList.remove('visible');
+        addPostElem.reset();
+    });
+
     showAllPosts();
     toggleAuthDom();
 };
 
 document.addEventListener('DOMContentLoaded', init);
+
+
+
+// tests
+
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      let displayName = user.displayName;
+      let email = user.email;
+      let emailVerified = user.emailVerified;
+      let photoURL = user.photoURL;
+      let isAnonymous = user.isAnonymous;
+      let uid = user.uid;
+      let providerData = user.providerData;
+    } else {
+        console.log(null);
+    }
+  });

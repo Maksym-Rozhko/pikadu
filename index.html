@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/fonts.css">
     <link rel="stylesheet" href="./css/style.css">
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
     <script src="./js/main.js" defer></script>
     <title>
         Pikadu - Главная
@@ -309,6 +316,20 @@
             </section>
         </main>
         <!-- /.posts -->
+        <form action="#" class="add-post">
+            <input type="text" name="title" class="add-title" placeholder="Заголовок вашего поста">
+            <textarea  name="text" class="add-text" placeholder="Текст вашего поста"></textarea>
+            <input type="text" name="tags" class="add-title" placeholder="Добавьте теги через запятую">
+            <div class="add-buttons">
+                <button type="submit" class="button add-button">
+                    <svg class="icon icon-fire">
+                        <use xlink:href="images/icons.svg#fire"></use>
+                    </svg>
+                    Опубликовать пост
+                </button>
+            </div>
+        </form>
+        <!-- /.add-post -->
         <aside class="sidebar">
             <div class="login">
                 <form class="login-form">
