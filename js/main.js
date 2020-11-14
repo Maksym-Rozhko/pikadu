@@ -39,50 +39,79 @@ const userAvatarElem = document.querySelector('.user-avatar');
 const postsWrapper = document.querySelector('.posts');
 const btnNewPost = document.querySelector('.button-new-post');
 const addPostElem = document.querySelector('.add-post');
+const loginForget = document.querySelector('.login-forget');
+const defaultPhoto = userAvatarElem.src;
 
-const listUsers = [
-    {
-        id: '01',
-        email: 'maks@gmail.com',
-        password: '232323',
-        displayName: 'MaksJS',
-        avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
-    },
-    {
-        id: '02',
-        email: 'rita@gmail.com',
-        password: '212121',
-        displayName: 'RitaKillMaks',
-    },
-];
+// const listUsers = [
+//     {
+//         id: '01',
+//         email: 'maks@gmail.com',
+//         password: '232323',
+//         displayName: 'MaksJS',
+//         avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
+//     },
+//     {
+//         id: '02',
+//         email: 'rita@gmail.com',
+//         password: '212121',
+//         displayName: 'RitaKillMaks',
+//     },
+// ];
 
 const setUsers = {
     user: null,
-    LogIn(email, password, handler) {
-        if(handler) {
-            handler();
-        }
+    initUser(handler) {
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                this.user = user;
+            } else {
+                this.user = null;
+            }
+            if(handler) handler();
+        });
+    },
+    LogIn(email, password) {
+        // if(handler) {
+        //     handler();
+        // }
         // console.log('Log In');
         // console.log(email, password);
         if(!regExpValidEmail.test(email)) {
             alert('Email isn\'t valid');
             return; 
         }
-        const user = this.getUser(email);
-        if(user && user.password === password) {
-            this.userAuthorization(user);
-            handler();
-        } else {
-            alert('The user with this password is not defined.');
-        }
+
+        firebase.auth()
+            .signInWithEmailAndPassword(email, password)
+            .catch(err => {
+                const errCode = err.code;
+                const errMessage = err.message;
+                if(errCode === 'auth/wrong-password') {
+                    console.log(errMessage);
+                    alert('Invalid password');
+                } else if(errCode === 'auth/user-not-found') {
+                    console.log(errMessage);
+                    alert('This user is not found.');
+                } else {
+                    alert(errMessage);
+                }
+                console.log(err);
+            });
+        // const user = this.getUser(email);
+        // if(user && user.password === password) {
+        //     this.userAuthorization(user);
+        //     handler();
+        // } else {
+        //     alert('The user with this password is not defined.');
+        // }
     },
-    LogOut(handler) {
-        if(handler) {
-            handler();
-        }
+    LogOut() {
+        firebase.auth().signOut()
+        // if(handler) {
+        //     handler();
+        // }
         // console.log('Log Out');
-        this.user = null;
-        handler();
+        // this.user = null;
     },
     SignUp(email, password, handler) {
         if(handler) {
@@ -97,23 +126,43 @@ const setUsers = {
             alert('Email and password fields haven\'t been entered.');
             return;
         }
-        if(!this.getUser(email)) {
-            const user = {
-                email,
-                password,
-                displayName: email.substring(0, email.indexOf('@'))
-            };
-            listUsers.push(user);
-            this.userAuthorization(user);
-            handler();
-            // console.log(listUsers);
-        } else {
-            alert('The user with this email is already registered.');
-        }
-    },
-    getUser(email) {
-        return listUsers.find((item) => item.email === email);
 
+        firebase.auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(data => {
+                this.editUser(email.substring(0, email.indexOf('@')), null, handler)
+            })
+            .catch(err => {
+                const errCode = err.code;
+                const errMessage = err.message;
+                if(errCode === 'auth/weak-password') {
+                    console.log(errMessage);
+                    alert('Weak password');
+                } else if(errCode === 'auth/email-already-in-use') {
+                    console.log(errMessage);
+                    alert('This mail has been use');
+                } else {
+                    alert(errMessage);
+                }
+
+                console.log(err);
+            });
+        // if(!this.getUser(email)) { // I used to this before firebase
+        //     const user = {
+        //         email,
+        //         password,
+        //         displayName: email.substring(0, email.indexOf('@'))
+        //     };
+        //     listUsers.push(user);
+        //     this.userAuthorization(user);
+        //     handler();
+        //     console.log(listUsers);
+        // } else {
+        //     alert('The user with this email is already registered.');
+        // }
+    },
+    // getUser(email) {
+    //     return listUsers.find((item) => item.email === email);
         // let user = null;
         // for (let i = 0; i < listUsers.length; i++) {
         //     if (listUsers[i].email === email) {
@@ -122,81 +171,108 @@ const setUsers = {
         //     };
         // };
         // return user;
-    },
-    userAuthorization(user) {
-        this.user = user;
-    },
-    forgetPass() {
-        console.log('Forget password?')
-    },
-    editUser(userName, userAvatar, handler) {
-        if(handler) {
-            handler();
-        }
-        if(userName) {
-            this.user.displayName = userName;
+    // },
+    // userAuthorization(user) {
+    //     this.user = user;
+    // },
+    editUser(displayName, photoURL, handler) {
+        const user = firebase.auth().currentUser;
+
+        // if(handler) {
+        //     handler();
+        // }
+        if(displayName) {
+            if(photoURL) {
+                user.updateProfile({
+                    displayName,
+                    photoURL
+                }).then(handler)
+            } else {
+                user.updateProfile({
+                    displayName,
+                }).then(handler)
+            }
         };
-        if(userAvatar) {
-            this.user.avatar = userAvatar;
-        };
-        handler();
+    },
+    sendForgetPassword(email) {
+        firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                alert('Email sent');
+            })
+            .catch(err => {
+                console.log(err);
+            })
     },
 };
 
+loginForget.addEventListener('click', e => {
+    e.preventDefault();
+    setUsers.sendForgetPassword(emailInput.value);
+    emailInput.value = '';
+});
+
 const setPosts = {
     allPosts: [
-        {
-            title: 'Заголовок поста',
-            text: 'Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Злых, имеет запятых. Маленькая заманивший образ, ipsum продолжил щеке, всеми маленький свою свой великий, если то. Большого семантика осталось текстами. Переписали имени жизни своих меня ты. Мир, щеке буквоград. Все, меня силуэт агентство взгляд инициал свое подзаголовок свой оксмокс власти выйти взобравшись, до текста! Переулка текстов снова образ сбить продолжил. Парадигматическая вопрос выйти ведущими щеке журчит дорогу пунктуация вскоре меня, взгляд точках! Снова составитель заглавных проектах грустный. Собрал сих рыбного lorem последний что текста толку оксмокс наш ты строчка! Взгляд!',
-            tags: [
-                'свежее',
-                'новое',
-                'горячее',
-                'мое',
-                'случайность'
-            ],
-            author: { 
-                displayName: 'maks',
-                avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
-            },
-            date: '11.11.2020, 15:05:44',
-            like: 75,
-            comments: 20,
-        },
-        {
-            title: 'Заголовок поста',
-            text: 'HTML (от англ. HyperText Markup Language — «язык гипертекстовой разметки») — стандартизированный язык разметки веб-страниц во Всемирной паутине. Код HTML интерпретируется браузерами; полученная в результате интерпретации страница отображается на экране монитора компьютера или мобильного устройства.',
-            tags: [
-                'свежее',
-                'новое',
-                'горячее',
-                'случайность'
-            ],
-            author: {
-                displayName: 'kate',
-                avatar: 'https://ath2.unileverservices.com/wp-content/uploads/sites/4/2019/06/lemonade-braids-freshlengths.jpg',
-            },
-            date: '10.10.2020, 12:35:12',
-            like: 35,
-            comments: 17,
-        }
+        // {
+        //     title: 'Заголовок поста',
+        //     text: 'Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Злых, имеет запятых. Маленькая заманивший образ, ipsum продолжил щеке, всеми маленький свою свой великий, если то. Большого семантика осталось текстами. Переписали имени жизни своих меня ты. Мир, щеке буквоград. Все, меня силуэт агентство взгляд инициал свое подзаголовок свой оксмокс власти выйти взобравшись, до текста! Переулка текстов снова образ сбить продолжил. Парадигматическая вопрос выйти ведущими щеке журчит дорогу пунктуация вскоре меня, взгляд точках! Снова составитель заглавных проектах грустный. Собрал сих рыбного lorem последний что текста толку оксмокс наш ты строчка! Взгляд!',
+        //     tags: [
+        //         'свежее',
+        //         'новое',
+        //         'горячее',
+        //         'мое',
+        //         'случайность'
+        //     ],
+        //     author: { 
+        //         displayName: 'maks',
+        //         avatar: 'https://whatsnewindonesia.com/wp-content/uploads/2019/05/Corporatebeard.png',
+        //     },
+        //     date: '11.11.2020, 15:05:44',
+        //     like: 75,
+        //     comments: 20,
+        // },
+        // {
+        //     title: 'Заголовок поста',
+        //     text: 'HTML (от англ. HyperText Markup Language — «язык гипертекстовой разметки») — стандартизированный язык разметки веб-страниц во Всемирной паутине. Код HTML интерпретируется браузерами; полученная в результате интерпретации страница отображается на экране монитора компьютера или мобильного устройства.',
+        //     tags: [
+        //         'свежее',
+        //         'новое',
+        //         'горячее',
+        //         'случайность'
+        //     ],
+        //     author: {
+        //         displayName: 'kate',
+        //         avatar: 'https://ath2.unileverservices.com/wp-content/uploads/sites/4/2019/06/lemonade-braids-freshlengths.jpg',
+        //     },
+        //     date: '10.10.2020, 12:35:12',
+        //     like: 35,
+        //     comments: 17,
+        // }
     ],
     addPost(title, text, tags, handler) {
-        if(handler) {
-            handler();
-        }
+        const user = firebase.auth().currentUser;
         this.allPosts.unshift({
+            id: `postID${(+new Date()).toString(16)}-${user.uid}`,
             title,
             text,
             tags: tags.split(',').map(item => item.trim()),
             author: {
                 displayName: setUsers.user.displayName,
-                avatar: setUsers.user.avatar,
+                avatar: setUsers.user.photoURL,
             },
             date: new Date().toLocaleString(),
             like: 0,
             comments: 0,
         });
+
+        firebase.database().ref('post').set(this.allPosts)
+            .then(() => this.getPosts(handler));
+    },
+    getPosts(handler) {
+        firebase.database().ref('post').on('value', snapshot => {
+            this.allPosts = snapshot.val() || [];
+            handler();
+        })
     }
 };
 
@@ -208,7 +284,7 @@ const toggleAuthDom = () => {
         currentUserElem.style.display = '';
         loginElem.style.display = 'none';
         userNameElem.textContent = user.displayName; //.split('\@')[0];
-        userAvatarElem.src = user.avatar || userAvatarElem.src;
+        userAvatarElem.src = user.photoURL || defaultPhoto; //userAvatarElem.src
         btnNewPost.classList.add('visible');
         // userAvatarElem.src = user.avatar ? user.avatar : userAvatarElem.src;
     } else {
@@ -360,13 +436,14 @@ const init = () => {
         addPostElem.reset();
     });
 
+    setUsers.initUser(toggleAuthDom);
+    setPosts.getPosts(showAllPosts);
+
     showAllPosts();
-    toggleAuthDom();
+    // toggleAuthDom();
 };
 
 document.addEventListener('DOMContentLoaded', init);
-
-
 
 // tests
 
